@@ -5,196 +5,107 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Apex General Ventures | Premium Sourcing</title>
     <style>
-        /* --- CSS STYLES --- */
+        /* --- CSS VARIABLES --- */
         :root {
             --primary: #FFD700; /* Gold */
-            --dark: #0a0a0a;    /* Deep Black */
-            --gray: #1e1e1e;    /* Dark Gray */
+            --dark: #050505;    /* Deep Black */
+            --card-bg: #111111; /* Dark Gray for cards */
             --text: #ffffff;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; }
 
         body {
             background-color: var(--dark);
             color: var(--text);
             line-height: 1.6;
+            overflow-x: hidden; 
         }
 
-        /* Navigation */
+        /* --- NAVIGATION --- */
         nav {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 20px 5%;
-            background-color: rgba(10, 10, 10, 0.95);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
+            background-color: #000;
             border-bottom: 1px solid #333;
         }
 
-        .logo {
-            font-size: 1.5rem;
-            font-weight: bold;
-            letter-spacing: 2px;
-        }
+        .logo { font-size: 1.5rem; font-weight: bold; text-transform: uppercase; }
+        .logo span { color: var(--primary); }
+        .nav-links a { color: #fff; text-decoration: none; margin-left: 20px; }
 
-        .logo span {
-            color: var(--primary);
-        }
-
-        .nav-links a {
-            color: var(--text);
-            text-decoration: none;
-            margin-left: 20px;
-            font-size: 0.9rem;
-            transition: 0.3s;
-        }
-
-        .nav-links a:hover {
-            color: var(--primary);
-        }
-
-        /* Hero Section */
+        /* --- HERO SECTION --- */
         .hero {
-            height: 80vh;
+            position: relative; 
+            height: 100vh; /* Force full screen height */
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
             text-align: center;
-            padding: 0 20px;
-            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070&auto=format&fit=crop'); 
-            background-size: cover;
-            background-position: center;
+            background-color: #000;
+            overflow: hidden;
         }
 
-        .hero h1 {
-            font-size: 3.5rem;
-            margin-bottom: 20px;
-            text-transform: uppercase;
+        #hero-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1; 
         }
 
-        .hero p {
-            font-size: 1.2rem;
-            max-width: 600px;
-            margin-bottom: 30px;
-            color: #ccc;
+        .hero-content {
+            position: relative;
+            z-index: 2; 
         }
 
+        .hero h1 { font-size: 3rem; margin-bottom: 10px; text-transform: uppercase; color: #fff; }
+        .hero p { color: #ccc; margin-bottom: 20px; }
+        
         .btn {
             padding: 12px 30px;
             background-color: var(--primary);
-            color: var(--dark);
+            color: #000;
             text-decoration: none;
             font-weight: bold;
             border-radius: 5px;
-            transition: 0.3s;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            display: inline-block;
             cursor: pointer;
             border: none;
         }
 
-        .btn:hover {
-            background-color: #e6c200;
-            transform: scale(1.05);
-        }
-
-        /* Categories Section */
-        .section-title {
-            text-align: center;
-            margin: 60px 0 40px;
-            font-size: 2rem;
-            text-transform: uppercase;
-        }
-        
-        .section-title span {
-            border-bottom: 3px solid var(--primary);
-        }
-
+        /* --- GRID --- */
         .grid-container {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 20px;
-            padding: 0 5% 60px;
+            padding: 50px 5%;
         }
 
         .card {
-            background-color: var(--gray);
-            border-radius: 10px;
-            overflow: hidden;
-            transition: 0.3s;
+            background-color: var(--card-bg);
             border: 1px solid #333;
+            border-radius: 8px;
+            overflow: hidden;
         }
 
-        .card:hover {
-            transform: translateY(-5px);
-            border-color: var(--primary);
-        }
-
-        /* Placeholder for your actual images */
-        .card-img {
-            height: 200px;
+        /* FIXING THE IMAGE STYLES */
+        .card img {
             width: 100%;
-            background-color: #333;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #555;
-            font-weight: bold;
-        }
-        
-        /* Using actual images from unsplash as placeholders */
-        .img-phones { background: url('images/EoY-2022-Best-Phones-on-leather.jpg') center/cover; }
-        .img-cars   { background: url('images/6-4.jpg') center/cover; }
-        .img-trucks { background: url('images/Sinotruk-Howo.jpg') center/cover; }
-        .img-build  { background: url('images/Hima-Cement-II.jpg') center/cover; } 
-        .card-content {
-            padding: 20px;
+            height: 250px;
+            object-fit: cover;
+            display: block; /* Removes bottom gap */
+            background-color: #333; /* Shows gray if image breaks */
         }
 
-        .card h3 {
-            margin-bottom: 10px;
-            color: var(--primary);
-        }
+        .card-content { padding: 20px; }
+        .card h3 { color: var(--primary); margin-bottom: 10px; }
+        .card p { color: #aaa; margin-bottom: 15px; font-size: 0.9rem; }
 
-        .card p {
-            font-size: 0.9rem;
-            color: #bbb;
-            margin-bottom: 15px;
-        }
-
-        /* Marketing Service Section */
-        .marketing-banner {
-            background: linear-gradient(90deg, #111, #222);
-            padding: 50px 5%;
-            text-align: center;
-            border-top: 1px solid #333;
-            border-bottom: 1px solid #333;
-        }
-
-        /* Footer */
-        footer {
-            text-align: center;
-            padding: 40px 0;
-            background-color: #050505;
-            font-size: 0.8rem;
-            color: #666;
-        }
-
-        /* Mobile Adjustments */
-        @media (max-width: 768px) {
-            .hero h1 { font-size: 2.5rem; }
-            nav { flex-direction: column; gap: 10px; }
-            .nav-links { margin-top: 10px; }
-        }
+        footer { text-align: center; padding: 40px 0; color: #666; font-size: 0.8rem; }
     </style>
 </head>
 <body>
@@ -202,85 +113,140 @@
     <nav>
         <div class="logo">APEX <span>VENTURES</span></div>
         <div class="nav-links">
-            <a href="#products">Products</a>
-            <a href="#services">Services</a>
-            <a href="#contact">Contact</a>
+            <a href="#" onclick="openWhatsApp()">Contact Us</a>
         </div>
     </nav>
 
     <section class="hero">
-        <h1>We Source. We Deliver.</h1>
-        <p>From High-End Tech to Heavy Construction Machinery. <br>The most reliable logistics partner in Uganda.</p>
-        <a href="#" onclick="openWhatsApp()" class="btn">Order via WhatsApp</a>
+        <canvas id="hero-canvas"></canvas>
+        <div class="hero-content">
+            <h1>We Source. We Deliver.</h1>
+            <p>Logistics • Construction • Technology</p>
+            <a href="#" onclick="openWhatsApp()" class="btn">Order via WhatsApp</a>
+        </div>
     </section>
 
-    <h2 class="section-title" id="products"><span>Our Departments</span></h2>
-    
     <div class="grid-container">
         <div class="card">
-            <div class="card-img img-phones"></div>
+            <img src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=600" alt="Phone">
             <div class="card-content">
-                <h3>Electronics & Gadgets</h3>
-                <p>Latest iPhones, Samsung, Smartwatches, and Audio gear. Best prices in Kampala.</p>
-                <button class="btn" style="font-size:0.8rem; padding: 8px 15px;" onclick="inquire('Electronics')">View Stock</button>
+                <h3>Electronics</h3>
+                <p>Latest iPhones and Gadgets.</p>
+                <button class="btn" onclick="inquire('Electronics')">Check Stock</button>
             </div>
         </div>
 
         <div class="card">
-            <div class="card-img img-cars"></div>
+            <img src="https://images.unsplash.com/photo-1542282088-fe8426682b8f?w=600" alt="Car">
             <div class="card-content">
-                <h3>Automotive Sourcing</h3>
-                <p>Direct bond prices on Subarus, Toyotas, and luxury vehicles. We verify before you buy.</p>
-                <button class="btn" style="font-size:0.8rem; padding: 8px 15px;" onclick="inquire('Cars')">View Stock</button>
+                <h3>Cars</h3>
+                <p>Subarus & Toyotas direct from bond.</p>
+                <button class="btn" onclick="inquire('Cars')">Check Stock</button>
             </div>
         </div>
 
         <div class="card">
-            <div class="card-img img-trucks"></div>
+            <img src="https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?w=600" alt="Truck">
             <div class="card-content">
-                <h3>Heavy Commercial</h3>
-                <p>Fuso, Isuzu, and Sino Trucks. Reliable machinery for your business needs.</p>
-                <button class="btn" style="font-size:0.8rem; padding: 8px 15px;" onclick="inquire('Trucks')">View Stock</button>
+                <h3>Heavy Trucks</h3>
+                <p>Fuso & Sino Trucks for work.</p>
+                <button class="btn" onclick="inquire('Trucks')">Check Stock</button>
             </div>
         </div>
 
         <div class="card">
-            <div class="card-img img-build"></div>
+            <img src="https://images.unsplash.com/photo-1589939705384-5185137a7f0f?w=600" alt="Cement">
             <div class="card-content">
-                <h3>Building Materials</h3>
-                <p>Cement, Tiles, Iron Sheets, and Plumbing. Delivered to your site.</p>
-                <button class="btn" style="font-size:0.8rem; padding: 8px 15px;" onclick="inquire('Materials')">Get Quote</button>
+                <h3>Construction</h3>
+                <p>Cement & Hardware materials.</p>
+                <button class="btn" onclick="inquire('Materials')">Get Quote</button>
             </div>
         </div>
     </div>
 
-    <section class="marketing-banner" id="services">
-        <h2 style="color: white; margin-bottom: 15px;">Need Business Growth?</h2>
-        <p style="color: #ccc; max-width: 600px; margin: 0 auto 20px;">
-            Apex Marketing helps local businesses explode their sales through targeted digital ads.
-        </p>
-        <button class="btn" onclick="inquire('Marketing Services')">Hire Us</button>
-    </section>
-
-    <footer id="contact">
-        <p>&copy; 2025 Apex General Ventures UG. All Rights Reserved.</p>
-        <p>Kampala, Uganda | Operating 24/7 Online</p>
+    <footer>
+        <p>&copy; 2025 Apex General Ventures UG</p>
     </footer>
 
     <script>
-        // Replace this number with your actual WhatsApp number (format: 256xxxxxxxxx)
+        // YOUR PHONE NUMBER
         const myPhoneNumber = "256757081676"; 
 
         function openWhatsApp() {
-            const url = `https://wa.me/${myPhoneNumber}?text=Hello Apex, I want to make an inquiry.`;
-            window.open(url, '_blank');
+            window.open(`https://wa.me/${myPhoneNumber}?text=I want to inquire about Apex services`, '_blank');
+        }
+        function inquire(item) {
+            window.open(`https://wa.me/${myPhoneNumber}?text=I am interested in ${item}`, '_blank');
         }
 
-        function inquire(product) {
-            const url = `https://wa.me/${myPhoneNumber}?text=Hello Apex, I am interested in ${product}. Please show me what is available.`;
-            window.open(url, '_blank');
+        // --- FIXED PARTICLE SYSTEM ---
+        const canvas = document.getElementById('hero-canvas');
+        const ctx = canvas.getContext('2d');
+        
+        let particlesArray;
+        
+        function init() {
+            // FIX: Using window.innerHeight guarantees it fills the screen
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            
+            particlesArray = [];
+            // Create particles
+            let numberOfParticles = (canvas.width * canvas.height) / 9000;
+            for (let i = 0; i < numberOfParticles; i++) {
+                particlesArray.push(new Particle());
+            }
         }
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 2 + 1;
+                this.speedX = (Math.random() * 2) - 1; // Faster speed
+                this.speedY = (Math.random() * 2) - 1;
+                this.color = '#FFD700'; 
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                if (this.x > canvas.width || this.x < 0) this.speedX = -this.speedX;
+                if (this.y > canvas.height || this.y < 0) this.speedY = -this.speedY;
+            }
+            draw() {
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < particlesArray.length; i++) {
+                particlesArray[i].update();
+                particlesArray[i].draw();
+                // Draw lines
+                for (let j = i; j < particlesArray.length; j++) {
+                    let dx = particlesArray[i].x - particlesArray[j].x;
+                    let dy = particlesArray[i].y - particlesArray[j].y;
+                    let dist = Math.sqrt(dx*dx + dy*dy);
+                    if (dist < 100) {
+                        ctx.beginPath();
+                        ctx.strokeStyle = `rgba(255, 215, 0, ${1 - dist/100})`;
+                        ctx.lineWidth = 0.5;
+                        ctx.moveTo(particlesArray[i].x, particlesArray[i].y);
+                        ctx.lineTo(particlesArray[j].x, particlesArray[j].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+            requestAnimationFrame(animate);
+        }
+
+        window.addEventListener('resize', init);
+        init(); // Start immediately
+        animate();
     </script>
-
 </body>
 </html>
