@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apex General Ventures | Premium Sourcing</title>
+    <style>
+        /* --- CSS STYLES --- */
+        :root {
+            --primary: #FFD700; /* Gold */
+            --dark: #0a0a0a;    /* Deep Black */
+            --gray: #1e1e1e;    /* Dark Gray */
+            --text: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--dark);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        /* Navigation */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 5%;
+            background-color: rgba(10, 10, 10, 0.95);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid #333;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+
+        .logo span {
+            color: var(--primary);
+        }
+
+        .nav-links a {
+            color: var(--text);
+            text-decoration: none;
+            margin-left: 20px;
+            font-size: 0.9rem;
+            transition: 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 80vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 20px;
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070&auto=format&fit=crop'); 
+            background-size: cover;
+            background-position: center;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin-bottom: 30px;
+            color: #ccc;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            background-color: var(--primary);
+            color: var(--dark);
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 5px;
+            transition: 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn:hover {
+            background-color: #e6c200;
+            transform: scale(1.05);
+        }
+
+        /* Categories Section */
+        .section-title {
+            text-align: center;
+            margin: 60px 0 40px;
+            font-size: 2rem;
+            text-transform: uppercase;
+        }
+        
+        .section-title span {
+            border-bottom: 3px solid var(--primary);
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            padding: 0 5% 60px;
+        }
+
+        .card {
+            background-color: var(--gray);
+            border-radius: 10px;
+            overflow: hidden;
+            transition: 0.3s;
+            border: 1px solid #333;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+        }
+
+        /* Placeholder for your actual images */
+        .card-img {
+            height: 200px;
+            width: 100%;
+            background-color: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #555;
+            font-weight: bold;
+        }
+        
+        /* Using actual images from unsplash as placeholders */
+        .img-phones { background: url('images/EoY-2022-Best-Phones-on-leather.jpg') center/cover; }
+        .img-cars   { background: url('images/6-4.jpg') center/cover; }
+        .img-trucks { background: url('images/Sinotruk-Howo.jpg') center/cover; }
+        .img-build  { background: url('images/Hima-Cement-II.jpg') center/cover; } 
+        .card-content {
+            padding: 20px;
+        }
+
+        .card h3 {
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+
+        .card p {
+            font-size: 0.9rem;
+            color: #bbb;
+            margin-bottom: 15px;
+        }
+
+        /* Marketing Service Section */
+        .marketing-banner {
+            background: linear-gradient(90deg, #111, #222);
+            padding: 50px 5%;
+            text-align: center;
+            border-top: 1px solid #333;
+            border-bottom: 1px solid #333;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 40px 0;
+            background-color: #050505;
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        /* Mobile Adjustments */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.5rem; }
+            nav { flex-direction: column; gap: 10px; }
+            .nav-links { margin-top: 10px; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo">APEX <span>VENTURES</span></div>
+        <div class="nav-links">
+            <a href="#products">Products</a>
+            <a href="#services">Services</a>
+            <a href="#contact">Contact</a>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <h1>We Source. We Deliver.</h1>
+        <p>From High-End Tech to Heavy Construction Machinery. <br>The most reliable logistics partner in Uganda.</p>
+        <a href="#" onclick="openWhatsApp()" class="btn">Order via WhatsApp</a>
+    </section>
+
+    <h2 class="section-title" id="products"><span>Our Departments</span></h2>
+    
+    <div class="grid-container">
+        <div class="card">
+            <div class="card-img img-phones"></div>
+            <div class="card-content">
+                <h3>Electronics & Gadgets</h3>
+                <p>Latest iPhones, Samsung, Smartwatches, and Audio gear. Best prices in Kampala.</p>
+                <button class="btn" style="font-size:0.8rem; padding: 8px 15px;" onclick="inquire('Electronics')">View Stock</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-img img-cars"></div>
+            <div class="card-content">
+                <h3>Automotive Sourcing</h3>
+                <p>Direct bond prices on Subarus, Toyotas, and luxury vehicles. We verify before you buy.</p>
+                <button class="btn" style="font-size:0.8rem; padding: 8px 15px;" onclick="inquire('Cars')">View Stock</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-img img-trucks"></div>
+            <div class="card-content">
+                <h3>Heavy Commercial</h3>
+                <p>Fuso, Isuzu, and Sino Trucks. Reliable machinery for your business needs.</p>
+                <button class="btn" style="font-size:0.8rem; padding: 8px 15px;" onclick="inquire('Trucks')">View Stock</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-img img-build"></div>
+            <div class="card-content">
+                <h3>Building Materials</h3>
+                <p>Cement, Tiles, Iron Sheets, and Plumbing. Delivered to your site.</p>
+                <button class="btn" style="font-size:0.8rem; padding: 8px 15px;" onclick="inquire('Materials')">Get Quote</button>
+            </div>
+        </div>
+    </div>
+
+    <section class="marketing-banner" id="services">
+        <h2 style="color: white; margin-bottom: 15px;">Need Business Growth?</h2>
+        <p style="color: #ccc; max-width: 600px; margin: 0 auto 20px;">
+            Apex Marketing helps local businesses explode their sales through targeted digital ads.
+        </p>
+        <button class="btn" onclick="inquire('Marketing Services')">Hire Us</button>
+    </section>
+
+    <footer id="contact">
+        <p>&copy; 2025 Apex General Ventures UG. All Rights Reserved.</p>
+        <p>Kampala, Uganda | Operating 24/7 Online</p>
+    </footer>
+
+    <script>
+        // Replace this number with your actual WhatsApp number (format: 256xxxxxxxxx)
+        const myPhoneNumber = "256757081676"; 
+
+        function openWhatsApp() {
+            const url = `https://wa.me/${myPhoneNumber}?text=Hello Apex, I want to make an inquiry.`;
+            window.open(url, '_blank');
+        }
+
+        function inquire(product) {
+            const url = `https://wa.me/${myPhoneNumber}?text=Hello Apex, I am interested in ${product}. Please show me what is available.`;
+            window.open(url, '_blank');
+        }
+    </script>
+
+</body>
+</html>
