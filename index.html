@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Apex General Ventures | Enterprise</title>
+    <title>Apex General Ventures | Official Site</title>
     <style>
         /* --- CORE STYLES --- */
         :root {
@@ -33,7 +33,7 @@
             z-index: 1000;
             border-bottom: 1px solid #333;
         }
-        .logo { font-size: 1.5rem; font-weight: bold; color: #fff; text-transform: uppercase; }
+        .logo { font-size: 1.5rem; font-weight: bold; color: #fff; text-transform: uppercase; letter-spacing: 2px; }
         .logo span { color: var(--primary); }
         .nav-btn {
             padding: 8px 20px;
@@ -42,12 +42,13 @@
             text-decoration: none;
             font-weight: bold;
             border-radius: 4px;
+            font-size: 0.9rem;
         }
 
         /* --- HERO SECTION --- */
         .hero {
             position: relative;
-            height: 70vh; /* Slightly shorter to show content below */
+            height: 75vh;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -69,7 +70,7 @@
             position: relative;
             z-index: 2;
             padding: 20px;
-            background: rgba(0,0,0,0.4); 
+            background: rgba(0,0,0,0.5); 
             border-radius: 10px;
             backdrop-filter: blur(3px);
             border: 1px solid rgba(255, 215, 0, 0.1);
@@ -78,7 +79,7 @@
         .hero h1 { font-size: 3.5rem; text-transform: uppercase; margin-bottom: 10px; letter-spacing: 2px; }
         .hero p { font-size: 1.2rem; color: #ccc; margin-bottom: 20px; }
 
-        /* --- NEW: ABOUT / DESCRIPTION SECTION --- */
+        /* --- MISSION & ABOUT SECTION --- */
         .about-section {
             display: flex;
             justify-content: center;
@@ -89,13 +90,20 @@
             border-bottom: 1px solid #222;
         }
 
+        .mission-text {
+            width: 100%;
+            text-align: center;
+            margin-bottom: 40px;
+            max-width: 800px;
+        }
+
         .about-card {
             background: #111;
             padding: 30px;
             border-radius: 10px;
             text-align: center;
             flex: 1;
-            min-width: 250px;
+            min-width: 280px;
             max-width: 350px;
             border: 1px solid #333;
             transition: 0.3s;
@@ -123,6 +131,7 @@
             cursor: pointer;
             border-radius: 20px;
             transition: 0.3s;
+            font-weight: 600;
         }
 
         .filter-btn:hover, .filter-btn.active {
@@ -155,9 +164,10 @@
 
         .card img {
             width: 100%;
-            height: 200px;
+            height: 220px;
             object-fit: cover;
             background: #222;
+            border-bottom: 2px solid var(--primary);
         }
 
         .info { padding: 20px; }
@@ -181,6 +191,16 @@
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            text-align: center;
+            padding: 40px;
+            background: #000;
+            color: #555;
+            font-size: 0.8rem;
+            border-top: 1px solid #111;
         }
 
         /* Mobile Fixes */
@@ -211,20 +231,27 @@
     </section>
 
     <section class="about-section">
+        <div class="mission-text">
+            <h2 style="color: white; margin-bottom: 20px; text-transform: uppercase;">Our Mission</h2>
+            <p style="font-size: 1.1rem; line-height: 1.6; color: #ccc;">
+                "To streamline the Ugandan supply chain by connecting businesses and individuals directly to premium sources, ensuring verified quality, fair pricing, and rapid logistics."
+            </p>
+        </div>
+
         <div class="about-card">
             <div class="about-icon">🛡️</div>
-            <h3>Verified Quality</h3>
-            <p>We don't deal in fakes. Every phone, car, and truck is inspected by our team before it reaches your hands.</p>
+            <h3>Integrity First</h3>
+            <p>We verify before we sell. If it’s not genuine, it’s not Apex. We prioritize your trust above all else.</p>
         </div>
         <div class="about-card">
-            <div class="about-icon">💰</div>
-            <h3>Broker Pricing</h3>
-            <p>We skip the middlemen. Get wholesale prices on electronics and direct bond rates on vehicles.</p>
+            <div class="about-icon">⚡</div>
+            <h3>Velocity</h3>
+            <p>Business moves fast. We move faster. From sourcing to dispatch, we respect your time.</p>
         </div>
         <div class="about-card">
-            <div class="about-icon">🚚</div>
-            <h3>Nationwide Delivery</h3>
-            <p>From Kampala to Upcountry. We handle the logistics and transportation securely to your doorstep.</p>
+            <div class="about-icon">💡</div>
+            <h3>Modern Efficiency</h3>
+            <p>We leverage technology and direct bond partnerships to lower costs and pass the savings to you.</p>
         </div>
     </section>
 
@@ -239,15 +266,19 @@
 
     <div id="product-grid" class="grid"></div>
 
+    <footer>
+        <p>&copy; 2025 Apex General Ventures UG. All Rights Reserved.</p>
+    </footer>
+
     <script>
         // --- 1. YOUR INVENTORY DATABASE ---
-        // EDIT THESE LINES TO ADD YOUR OWN PRODUCTS
+        // COPY PASTE THESE LINES TO ADD MORE PRODUCTS
         const inventory = [
             // --- PHONES ---
-            { id: 1, cat: 'phone', name: 'iPhone 14 Pro Max', price: '3.8M UGX', img: 'https://images.unsplash.com/photo-1678685888221-cda773a3dcdb?w=500' },
-            { id: 2, cat: 'phone', name: 'iPhone 13 (128GB)', price: '2.2M UGX', img: 'https://images.unsplash.com/photo-1632661674596-df8be070a5c5?w=500' },
-            { id: 3, cat: 'phone', name: 'Samsung S23 Ultra', price: '3.5M UGX', img: 'https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?w=500' },
-            { id: 4, cat: 'phone', name: 'Google Pixel 7', price: '1.8M UGX', img: 'https://images.unsplash.com/photo-1598327105666-5b89351aff23?w=500' },
+            { id: 1, cat: 'phone', name: 'iPhone 14 Pro Max', price: '1.9M UGX', img: 'https://images.unsplash.com/photo-1678685888221-cda773a3dcdb?w=500' },
+            { id: 2, cat: 'phone', name: 'iPhone 13 (128GB)', price: '1.2M UGX', img: 'https://images.unsplash.com/photo-1632661674596-df8be070a5c5?w=500' },
+            { id: 3, cat: 'phone', name: 'Samsung S25 Ultra', price: '3.5M UGX', img: 'https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?w=500' },
+            { id: 4, cat: 'phone', name: 'Google Pixel 8', price: '1.8M UGX', img: 'https://images.unsplash.com/photo-1598327105666-5b89351aff23?w=500' },
             { id: 5, cat: 'phone', name: 'MacBook Pro M1', price: '3.2M UGX', img: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca4?w=500' },
             { id: 6, cat: 'phone', name: 'iPad Air 5', price: '1.9M UGX', img: 'https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=500' },
 
@@ -277,8 +308,9 @@
                 if (filter === 'all' || item.cat === filter) {
                     const card = document.createElement('div');
                     card.className = 'card';
+                    // The onerror part automatically fixes broken image links!
                     card.innerHTML = `
-                        <img src="${item.img}" onerror="this.src='https://via.placeholder.com/500x300?text=No+Image+Available'" alt="${item.name}">
+                        <img src="${item.img}" onerror="this.src='https://via.placeholder.com/500x300?text=Apex+Ventures'" alt="${item.name}">
                         <div class="info">
                             <div class="cat-tag">${item.cat.toUpperCase()}</div>
                             <div class="title">${item.name}</div>
@@ -299,12 +331,12 @@
         }
 
         // --- 3. WHATSAPP CONFIG (UPDATE THIS) ---
-        const myNumber = "256700000000"; 
+        const myNumber = "256757081676"; 
 
         function openWA() { window.open(`https://wa.me/${myNumber}`, '_blank'); }
         function inquire(item) { window.open(`https://wa.me/${myNumber}?text=I want to order: ${item}`, '_blank'); }
 
-        // --- 4. PARTICLE SYSTEM (Fixed) ---
+        // --- 4. PARTICLE SYSTEM (Optimized for all screens) ---
         const canvas = document.getElementById("particle-canvas");
         const ctx = canvas.getContext("2d");
         let particles = [];
@@ -340,7 +372,9 @@
 
         function initParticles() {
             particles = [];
-            for (let i = 0; i < 50; i++) particles.push(new Particle());
+            // Calculate particles based on screen size (prevent overcrowding)
+            let particleCount = (window.innerWidth < 768) ? 30 : 60;
+            for (let i = 0; i < particleCount; i++) particles.push(new Particle());
         }
 
         function animate() {
@@ -364,11 +398,11 @@
             requestAnimationFrame(animate);
         }
 
-        window.addEventListener('resize', resize);
+        window.addEventListener('resize', () => { resize(); initParticles(); });
         resize();
         initParticles();
         animate();
-        renderProducts('all');
+        renderProducts('all'); // Load all products on start
     </script>
 </body>
 </html>
