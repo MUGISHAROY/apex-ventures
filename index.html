@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -23,7 +23,8 @@
 
         /* Light Mode Overrides */
         body.light-mode {
-            --primary: #D4AF37; /* Darker Gold for visibility */
+            /* We don't hardcode primary here anymore to allow custom overrides, 
+               defaulting back to root primary if not set */
             --bg-body: #f4f4f4;
             --bg-nav: rgba(255, 255, 255, 0.95);
             --bg-surface: #ffffff;
@@ -34,7 +35,7 @@
             --shadow: rgba(0,0,0,0.1);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; transition: background 0.3s, color 0.3s; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; transition: background 0.3s, color 0.3s, border-color 0.3s; }
 
         body {
             background-color: var(--bg-body);
@@ -62,7 +63,7 @@
         .logo { font-size: 1.4rem; font-weight: 800; letter-spacing: 0.5px; text-transform: uppercase; }
         .logo span { color: var(--primary); }
         
-        .nav-actions { display: flex; gap: 15px; align-items: center; }
+        .nav-actions { display: flex; gap: 15px; align-items: center; position: relative; }
 
         .icon-btn {
             background: transparent;
@@ -73,8 +74,35 @@
             cursor: pointer;
             display: flex; align-items: center; justify-content: center;
             font-size: 1.1rem;
+            transition: 0.2s;
         }
         .icon-btn:hover { border-color: var(--primary); color: var(--primary); }
+
+        /* Color Picker Panel */
+        .color-panel {
+            position: absolute;
+            top: 50px;
+            right: 0;
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            padding: 15px;
+            border-radius: 10px;
+            display: none;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            box-shadow: 0 10px 30px var(--shadow);
+            z-index: 1100;
+        }
+        .color-panel.show { display: grid; }
+        
+        .color-dot {
+            width: 30px; height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: transform 0.2s;
+        }
+        .color-dot:hover { transform: scale(1.2); border-color: var(--text-main); }
 
         .cta-btn {
             background: var(--primary);
@@ -257,7 +285,15 @@
 
         /* Mobile Responsive */
         @media(max-width: 768px) {
+            /* Fix Layout to be vertical */
             .layout { flex-direction: column; overflow-y: auto; }
+            
+            /* Nav Adjustments */
+            nav { padding: 10px 15px; }
+            .nav-actions { gap: 10px; }
+            .logo { font-size: 1.2rem; }
+            
+            /* Sidebar becomes Horizontal Scroll Menu */
             .sidebar { 
                 width: 100%; 
                 flex-direction: row; 
@@ -265,14 +301,53 @@
                 border-right: none; 
                 border-bottom: 1px solid var(--border); 
                 padding: 10px;
+                white-space: nowrap;
+                -ms-overflow-style: none;  /* IE and Edge */
+                scrollbar-width: none;  /* Firefox */
             }
+            .sidebar::-webkit-scrollbar { display: none; } /* Chrome, Safari */
+            
             .cat-header { display: none; }
-            .cat-btn { white-space: nowrap; padding: 5px 15px; font-size: 0.8rem; }
-            .hero { height: 30vh; }
-            .grid-container.list-view .card { height: auto; flex-direction: column; }
-            .grid-container.list-view .card img { width: 100%; height: 150px; }
-            .grid-container.list-view .card-details { flex-direction: column; align-items: flex-start; }
-            .grid-container.list-view .card-price { text-align: left; margin-top: 10px; }
+            .cat-btn { white-space: nowrap; padding: 8px 15px; font-size: 0.9rem; background: var(--bg-surface); border: 1px solid var(--border); border-radius: 20px; margin-right: 5px;}
+            .cat-btn.active { background: var(--primary); border-color: var(--primary); }
+
+            /* Hero Adjustments */
+            .hero { height: 30vh; min-height: 200px; }
+            .hero h1 { font-size: 1.8rem; }
+            .hero p { font-size: 0.9rem; }
+
+            /* Toolbar */
+            .toolbar { padding: 0 15px 15px 15px; }
+            .toolbar h2 { font-size: 1.2rem; }
+
+            /* Grid Adjustments - Force 2 Columns for 'App' feel */
+            .grid-container {
+                grid-template-columns: 1fr 1fr; 
+                padding: 0 15px 60px 15px;
+                gap: 15px;
+            }
+            
+            .card img { height: 140px; }
+            .card-details { padding: 10px; }
+            .card-title { font-size: 0.85rem; }
+            .card-price { font-size: 1rem; }
+
+            /* List View Mobile Optimizations */
+            .grid-container.list-view { grid-template-columns: 1fr; }
+            .grid-container.list-view .card { height: auto; flex-direction: row; padding: 10px;}
+            .grid-container.list-view .card img { width: 100px; height: 100px; border-radius: 4px; }
+            .grid-container.list-view .card-details { 
+                flex-direction: column; 
+                align-items: flex-start; 
+                justify-content: center;
+                padding: 0 0 0 15px;
+            }
+            .grid-container.list-view .card-title { font-size: 1rem; margin-bottom: 5px;}
+            .grid-container.list-view .card-price { text-align: left; margin: 0; }
+            .grid-container.list-view .card-condition { text-align: left; }
+            
+            /* Modal Fit */
+            .modal-box { width: 90%; padding: 25px; }
         }
     </style>
 </head>
@@ -284,6 +359,21 @@
         <div class="nav-actions">
             <!-- Theme Toggle -->
             <button class="icon-btn" onclick="toggleTheme()" title="Toggle Theme">◑</button>
+            
+            <!-- Color Picker -->
+            <button class="icon-btn" onclick="toggleColorPanel()" title="Change Color">🎨</button>
+            <div class="color-panel" id="colorPanel">
+                <div class="color-dot" style="background: #FFD700;" onclick="setColor('#FFD700')"></div> <!-- Gold -->
+                <div class="color-dot" style="background: #007BFF;" onclick="setColor('#007BFF')"></div> <!-- Blue -->
+                <div class="color-dot" style="background: #28a745;" onclick="setColor('#28a745')"></div> <!-- Green -->
+                <div class="color-dot" style="background: #dc3545;" onclick="setColor('#dc3545')"></div> <!-- Red -->
+                <div class="color-dot" style="background: #e83e8c;" onclick="setColor('#e83e8c')"></div> <!-- Pink -->
+                <div class="color-dot" style="background: #6f42c1;" onclick="setColor('#6f42c1')"></div> <!-- Purple -->
+                <div class="color-dot" style="background: #20c997;" onclick="setColor('#20c997')"></div> <!-- Teal -->
+                <div class="color-dot" style="background: #fd7e14;" onclick="setColor('#fd7e14')"></div> <!-- Orange -->
+                <div class="color-dot" style="background: #ffffff;" onclick="setColor('#ffffff')"></div> <!-- White -->
+            </div>
+
             <button class="icon-btn" onclick="openLogin()" title="Sign In">👤</button>
             <button class="icon-btn" onclick="openIG()" title="Instagram">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-instagram">
@@ -299,7 +389,7 @@
     <!-- LAYOUT -->
     <div class="layout">
         
-        <!-- SIDEBAR (Left) -->
+        <!-- SIDEBAR (Left on PC, Top Scroll on Mobile) -->
         <aside class="sidebar">
             <div class="cat-header">Departments</div>
             <button class="cat-btn active" onclick="filter('all', this)">All Inventory</button>
@@ -457,13 +547,25 @@
             document.body.classList.toggle('light-mode');
         }
 
-        // --- 6. MODAL ---
+        // --- 6. COLOR PICKER ---
+        function toggleColorPanel() {
+            document.getElementById('colorPanel').classList.toggle('show');
+        }
+        function setColor(color) {
+            document.body.style.setProperty('--primary', color);
+            // Re-init particles for new color
+            initParticles();
+            // Close panel
+            document.getElementById('colorPanel').classList.remove('show');
+        }
+
+        // --- 7. MODAL ---
         const modal = document.getElementById('loginModal');
         function openLogin() { modal.classList.add('open'); }
         function closeLogin() { modal.classList.remove('open'); }
         modal.addEventListener('click', e => { if(e.target === modal) closeLogin(); });
 
-        // --- 7. WHATSAPP & SOCIALS ---
+        // --- 8. WHATSAPP & SOCIALS ---
         const myNumber = "256757081676"; // CHANGE THIS
         const instagramHandle = "ApexVenturesUG"; // CHANGE THIS
 
@@ -471,7 +573,7 @@
         function openIG() { window.open(`https://instagram.com/${instagramHandle}`, '_blank'); }
         function inquire(item) { window.open(`https://wa.me/${myNumber}?text=Inquiry: ${item}`, '_blank'); }
 
-        // --- 8. PARTICLES ---
+        // --- 9. PARTICLES ---
         const canvas = document.getElementById("particle-canvas");
         const ctx = canvas.getContext("2d");
         let particles = [];
