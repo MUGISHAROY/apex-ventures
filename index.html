@@ -4,515 +4,163 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Apex General Ventures | Enterprise Platform</title>
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* --- 1. THEME VARIABLES (Dark & Light) --- */
-        :root {
-            /* Default Dark Mode */
-            --primary: #FFD700;
-            --bg-body: #050505;
-            --bg-nav: rgba(5, 5, 5, 0.95);
-            --bg-surface: #121212;
-            --bg-sidebar: #0a0a0a;
-            --text-main: #ffffff;
-            --text-muted: #888888;
-            --border: #222222;
-            --shadow: rgba(0,0,0,0.5);
-        }
-
-        /* Light Mode Overrides */
-        body.light-mode {
-            /* We don't hardcode primary here anymore to allow custom overrides, 
-               defaulting back to root primary if not set */
-            --bg-body: #f4f4f4;
-            --bg-nav: rgba(255, 255, 255, 0.95);
-            --bg-surface: #ffffff;
-            --bg-sidebar: #ffffff;
-            --text-main: #111111;
-            --text-muted: #666666;
-            --border: #e0e0e0;
-            --shadow: rgba(0,0,0,0.1);
-        }
-
+        /* --- THEME --- */
+        :root { --primary: #FFD700; --bg-body: #050505; --bg-nav: rgba(5, 5, 5, 0.95); --bg-surface: #121212; --bg-sidebar: #0a0a0a; --text-main: #ffffff; --text-muted: #888888; --border: #222222; --shadow: rgba(0,0,0,0.5); }
+        body.light-mode { --bg-body: #f4f4f4; --bg-nav: rgba(255, 255, 255, 0.95); --bg-surface: #ffffff; --bg-sidebar: #ffffff; --text-main: #111111; --text-muted: #666666; --border: #e0e0e0; --shadow: rgba(0,0,0,0.1); }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; transition: background 0.3s, color 0.3s, border-color 0.3s; }
-
-        body {
-            background-color: var(--bg-body);
-            color: var(--text-main);
-            overflow-x: hidden;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-
-        /* --- 2. NAVIGATION --- */
-        nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px 25px;
-            background-color: var(--bg-nav);
-            backdrop-filter: blur(10px);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            border-bottom: 1px solid var(--border);
-        }
+        body { background-color: var(--bg-body); color: var(--text-main); overflow-x: hidden; height: 100vh; display: flex; flex-direction: column; }
         
+        /* NAV */
+        nav { display: flex; justify-content: space-between; align-items: center; padding: 12px 25px; background-color: var(--bg-nav); backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid var(--border); }
         .logo { font-size: 1.4rem; font-weight: 800; letter-spacing: 0.5px; text-transform: uppercase; }
         .logo span { color: var(--primary); }
-        
         .nav-actions { display: flex; gap: 15px; align-items: center; position: relative; }
-
-        .icon-btn {
-            background: transparent;
-            border: 1px solid var(--border);
-            color: var(--text-main);
-            width: 35px; height: 35px;
-            border-radius: 50%;
-            cursor: pointer;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 1.1rem;
-            transition: 0.2s;
-        }
+        .icon-btn { background: transparent; border: 1px solid var(--border); color: var(--text-main); width: 35px; height: 35px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; }
         .icon-btn:hover { border-color: var(--primary); color: var(--primary); }
-
-        /* Color Picker Panel */
-        .color-panel {
-            position: absolute;
-            top: 50px;
-            right: 0;
-            background: var(--bg-surface);
-            border: 1px solid var(--border);
-            padding: 15px;
-            border-radius: 10px;
-            display: none;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            box-shadow: 0 10px 30px var(--shadow);
-            z-index: 1100;
-        }
-        .color-panel.show { display: grid; }
+        .cta-btn { background: var(--primary); color: #000; border: none; padding: 8px 18px; border-radius: 5px; cursor: pointer; font-weight: 700; text-decoration: none; font-size: 0.9rem; }
         
-        .color-dot {
-            width: 30px; height: 30px;
-            border-radius: 50%;
-            cursor: pointer;
-            border: 2px solid transparent;
-            transition: transform 0.2s;
-        }
-        .color-dot:hover { transform: scale(1.2); border-color: var(--text-main); }
-
-        .cta-btn {
-            background: var(--primary);
-            color: #000;
-            border: none;
-            padding: 8px 18px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: 700;
-            text-decoration: none;
-            font-size: 0.9rem;
-        }
-
-        /* --- 3. MAIN LAYOUT (Sidebar + Content) --- */
-        .layout {
-            display: flex;
-            flex: 1;
-            overflow: hidden; /* Prevent body scroll, scroll content instead */
-        }
-
-        /* SIDEBAR (Left) */
-        .sidebar {
-            width: 260px;
-            background: var(--bg-sidebar);
-            border-right: 1px solid var(--border);
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            overflow-y: auto;
-        }
-
-        .cat-header {
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            color: var(--text-muted);
-            margin-bottom: 10px;
-            font-weight: 700;
-            letter-spacing: 1px;
-        }
-
-        .cat-btn {
-            background: transparent;
-            color: var(--text-muted);
-            border: none;
-            padding: 10px 15px;
-            cursor: pointer;
-            font-weight: 500;
-            text-align: left;
-            border-radius: 6px;
-            transition: 0.2s;
-        }
-
+        /* LAYOUT */
+        .layout { display: flex; flex: 1; overflow: hidden; }
+        .sidebar { width: 260px; background: var(--bg-sidebar); border-right: 1px solid var(--border); padding: 20px; display: flex; flex-direction: column; gap: 10px; overflow-y: auto; }
+        .cat-btn { background: transparent; color: var(--text-muted); border: none; padding: 10px 15px; cursor: pointer; font-weight: 500; text-align: left; border-radius: 6px; transition: 0.2s; }
         .cat-btn:hover { background: rgba(128,128,128,0.1); color: var(--text-main); }
+        .cat-btn.active { background: var(--primary); color: #000; font-weight: 700; }
+        .main-content { flex: 1; overflow-y: auto; padding: 0; position: relative; }
         
-        .cat-btn.active { 
-            background: var(--primary); 
-            color: #000; 
-            font-weight: 700; 
-        }
-
-        /* MAIN CONTENT AREA */
-        .main-content {
-            flex: 1;
-            overflow-y: auto;
-            padding: 0;
-            position: relative;
-        }
-
-        /* HERO (Now inside main content) */
-        .hero {
-            position: relative;
-            height: 40vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            background: #000;
-            overflow: hidden;
-            margin-bottom: 20px;
-        }
-        #particle-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
+        /* HERO */
+        .hero { position: relative; height: 40vh; display: flex; align-items: center; justify-content: center; text-align: center; background: #000; overflow: hidden; margin-bottom: 20px; }
         .hero-content { position: relative; z-index: 2; padding: 20px; }
         .hero h1 { font-size: 2.5rem; margin-bottom: 5px; font-weight: 800; color: #fff; }
         .hero p { color: #ccc; }
-
-        /* VIEW CONTROLS */
-        .toolbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 30px 20px 30px;
-            border-bottom: 1px solid var(--border);
-            margin-bottom: 30px;
-        }
-        .toolbar h2 { font-size: 1.5rem; color: var(--text-main); }
-        .view-toggles { display: flex; gap: 10px; }
-
-        /* --- 4. PRODUCT GRID / LIST --- */
-        .grid-container {
-            padding: 0 30px 60px 30px;
-            display: grid;
-            gap: 20px;
-            /* Default Grid View */
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-        }
-
-        /* CARD STYLING */
-        .card {
-            background: var(--bg-surface);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            overflow: hidden;
-            transition: 0.2s;
-            cursor: pointer;
-            display: flex;
-            flex-direction: column;
-        }
+        
+        /* GRID */
+        .toolbar { display: flex; justify-content: space-between; align-items: center; padding: 0 30px 20px 30px; border-bottom: 1px solid var(--border); margin-bottom: 30px; }
+        .grid-container { padding: 0 30px 60px 30px; display: grid; gap: 20px; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
+        .card { background: var(--bg-surface); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; transition: 0.2s; cursor: pointer; display: flex; flex-direction: column; }
         .card:hover { transform: translateY(-3px); border-color: var(--primary); box-shadow: 0 5px 15px var(--shadow); }
-
-        .card img {
-            width: 100%;
-            height: 180px;
-            object-fit: cover;
-            background: #222;
-        }
+        .card img { width: 100%; height: 180px; object-fit: cover; background: #222; }
         .card-details { padding: 15px; flex: 1; display: flex; flex-direction: column; }
         .card-cat { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; margin-bottom: 5px; }
         .card-title { font-size: 0.95rem; font-weight: 600; color: var(--text-main); margin-bottom: 5px; }
         .card-price { font-size: 1.1rem; color: var(--primary); font-weight: 700; margin-top: auto; }
         .card-condition { font-size: 0.75rem; color: var(--text-muted); margin-top: 5px; }
-
-        /* --- LIST VIEW OVERRIDES --- */
-        .grid-container.list-view {
-            grid-template-columns: 1fr; /* Single column */
-        }
-        .grid-container.list-view .card {
-            flex-direction: row;
-            height: 120px;
-            align-items: center;
-        }
-        .grid-container.list-view .card img {
-            width: 120px;
-            height: 100%;
-        }
-        .grid-container.list-view .card-details {
-            flex-direction: row;
-            align-items: center;
-            justify-content: space-between;
-            width: 100%;
-            padding: 0 20px;
-        }
-        .grid-container.list-view .card-title { font-size: 1.1rem; margin: 0; flex: 2; }
-        .grid-container.list-view .card-cat { display: none; } /* Hide category in list view for space */
-        .grid-container.list-view .card-price { margin: 0; flex: 1; text-align: right; }
-        .grid-container.list-view .card-condition { flex: 1; text-align: center; }
-
-
-        /* --- 5. MODAL --- */
-        .modal-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.8); backdrop-filter: blur(5px);
-            z-index: 2000; display: none; justify-content: center; align-items: center;
-        }
-        .modal-overlay.open { display: flex; }
-        .modal-box {
-            background: var(--bg-surface);
-            border: 1px solid var(--border);
-            width: 400px; padding: 40px; border-radius: 12px;
-            text-align: center; color: var(--text-main);
-        }
-        .input-group input { 
-            background: var(--bg-body); 
-            border: 1px solid var(--border); 
-            color: var(--text-main); 
-            width: 100%; padding: 12px; margin-top: 5px; border-radius: 5px;
-        }
-        .auth-btn { width: 100%; padding: 12px; background: var(--primary); border: none; font-weight: bold; margin-top: 15px; cursor: pointer; border-radius: 5px; }
-        .close-btn { float: right; cursor: pointer; font-size: 1.5rem; }
-
-        /* Mobile Responsive */
-        @media(max-width: 768px) {
-            /* Fix Layout to be vertical */
-            .layout { flex-direction: column; overflow-y: auto; }
-            
-            /* Nav Adjustments */
-            nav { padding: 10px 15px; }
-            .nav-actions { gap: 10px; }
-            .logo { font-size: 1.2rem; }
-            
-            /* Sidebar becomes Horizontal Scroll Menu */
-            .sidebar { 
-                width: 100%; 
-                flex-direction: row; 
-                overflow-x: auto; 
-                border-right: none; 
-                border-bottom: 1px solid var(--border); 
-                padding: 10px;
-                white-space: nowrap;
-                -ms-overflow-style: none;  /* IE and Edge */
-                scrollbar-width: none;  /* Firefox */
-            }
-            .sidebar::-webkit-scrollbar { display: none; } /* Chrome, Safari */
-            
-            .cat-header { display: none; }
-            .cat-btn { white-space: nowrap; padding: 8px 15px; font-size: 0.9rem; background: var(--bg-surface); border: 1px solid var(--border); border-radius: 20px; margin-right: 5px;}
-            .cat-btn.active { background: var(--primary); border-color: var(--primary); }
-
-            /* Hero Adjustments */
-            .hero { height: 30vh; min-height: 200px; }
-            .hero h1 { font-size: 1.8rem; }
-            .hero p { font-size: 0.9rem; }
-
-            /* Toolbar */
-            .toolbar { padding: 0 15px 15px 15px; }
-            .toolbar h2 { font-size: 1.2rem; }
-
-            /* Grid Adjustments - Force 2 Columns for 'App' feel */
-            .grid-container {
-                grid-template-columns: 1fr 1fr; 
-                padding: 0 15px 60px 15px;
-                gap: 15px;
-            }
-            
-            .card img { height: 140px; }
-            .card-details { padding: 10px; }
-            .card-title { font-size: 0.85rem; }
-            .card-price { font-size: 1rem; }
-
-            /* List View Mobile Optimizations */
-            .grid-container.list-view { grid-template-columns: 1fr; }
-            .grid-container.list-view .card { height: auto; flex-direction: row; padding: 10px;}
-            .grid-container.list-view .card img { width: 100px; height: 100px; border-radius: 4px; }
-            .grid-container.list-view .card-details { 
-                flex-direction: column; 
-                align-items: flex-start; 
-                justify-content: center;
-                padding: 0 0 0 15px;
-            }
-            .grid-container.list-view .card-title { font-size: 1rem; margin-bottom: 5px;}
-            .grid-container.list-view .card-price { text-align: left; margin: 0; }
-            .grid-container.list-view .card-condition { text-align: left; }
-            
-            /* Modal Fit */
-            .modal-box { width: 90%; padding: 25px; }
-        }
+        
+        /* COLOR PICKER */
+        .color-panel { position: absolute; top: 50px; right: 0; background: var(--bg-surface); border: 1px solid var(--border); padding: 15px; border-radius: 10px; display: none; grid-template-columns: repeat(3, 1fr); gap: 10px; z-index: 1100; }
+        .color-panel.show { display: grid; }
+        .color-dot { width: 30px; height: 30px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; }
+        
+        @media(max-width: 768px) { .layout { flex-direction: column; } .sidebar { width: 100%; flex-direction: row; overflow-x: auto; padding: 10px; } .cat-btn { white-space: nowrap; } .grid-container { grid-template-columns: 1fr 1fr; padding: 0 15px 60px 15px; } }
     </style>
 </head>
 <body>
-
-    <!-- NAV -->
     <nav>
         <div class="logo">APEX <span>VENTURES</span></div>
         <div class="nav-actions">
-            <!-- Theme Toggle -->
             <button class="icon-btn" onclick="toggleTheme()" title="Toggle Theme">◑</button>
-            
-            <!-- Color Picker -->
             <button class="icon-btn" onclick="toggleColorPanel()" title="Change Color">🎨</button>
             <div class="color-panel" id="colorPanel">
-                <div class="color-dot" style="background: #FFD700;" onclick="setColor('#FFD700')"></div> <!-- Gold -->
-                <div class="color-dot" style="background: #007BFF;" onclick="setColor('#007BFF')"></div> <!-- Blue -->
-                <div class="color-dot" style="background: #28a745;" onclick="setColor('#28a745')"></div> <!-- Green -->
-                <div class="color-dot" style="background: #dc3545;" onclick="setColor('#dc3545')"></div> <!-- Red -->
-                <div class="color-dot" style="background: #e83e8c;" onclick="setColor('#e83e8c')"></div> <!-- Pink -->
-                <div class="color-dot" style="background: #6f42c1;" onclick="setColor('#6f42c1')"></div> <!-- Purple -->
-                <div class="color-dot" style="background: #20c997;" onclick="setColor('#20c997')"></div> <!-- Teal -->
-                <div class="color-dot" style="background: #fd7e14;" onclick="setColor('#fd7e14')"></div> <!-- Orange -->
-                <div class="color-dot" style="background: #ffffff;" onclick="setColor('#ffffff')"></div> <!-- White -->
+                <div class="color-dot" style="background: #FFD700;" onclick="setColor('#FFD700')"></div>
+                <div class="color-dot" style="background: #007BFF;" onclick="setColor('#007BFF')"></div>
+                <div class="color-dot" style="background: #28a745;" onclick="setColor('#28a745')"></div>
+                <div class="color-dot" style="background: #dc3545;" onclick="setColor('#dc3545')"></div>
             </div>
-
-            <button class="icon-btn" onclick="openLogin()" title="Sign In">👤</button>
-            <button class="icon-btn" onclick="openIG()" title="Instagram">
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-instagram">
-                    <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
-                    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
-                    <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
-                </svg>
-            </button>
             <a href="#" onclick="openWA()" class="cta-btn">WhatsApp</a>
         </div>
     </nav>
 
-    <!-- LAYOUT -->
     <div class="layout">
-        
-        <!-- SIDEBAR (Left on PC, Top Scroll on Mobile) -->
         <aside class="sidebar">
-            <div class="cat-header">Departments</div>
             <button class="cat-btn active" onclick="filter('all', this)">All Inventory</button>
             <button class="cat-btn" onclick="filter('phone', this)">Smartphones</button>
             <button class="cat-btn" onclick="filter('computing', this)">Laptops & PC</button>
-            <button class="cat-btn" onclick="filter('gaming', this)">Gaming Consoles</button>
-            <button class="cat-btn" onclick="filter('home', this)">Home Appliances</button>
-            <button class="cat-btn" onclick="filter('motors', this)">Motors & Bonds</button>
+            <button class="cat-btn" onclick="filter('gaming', this)">Gaming</button>
+            <button class="cat-btn" onclick="filter('home', this)">Home</button>
+            <button class="cat-btn" onclick="filter('motors', this)">Motors</button>
             <button class="cat-btn" onclick="filter('materials', this)">Construction</button>
         </aside>
 
-        <!-- MAIN CONTENT -->
         <main class="main-content">
-            
-            <!-- Hero (Inside Content) -->
             <section class="hero">
-                <canvas id="particle-canvas"></canvas>
                 <div class="hero-content">
                     <h1>The Sourcing Platform</h1>
                     <p>Direct Bond Links. Wholesale Tech. Verified Quality.</p>
                 </div>
             </section>
 
-            <!-- Toolbar -->
-            <div class="toolbar">
-                <h2 id="categoryTitle">All Inventory</h2>
-                <div class="view-toggles">
-                    <button class="icon-btn" onclick="setView('grid')">⊞</button>
-                    <button class="icon-btn" onclick="setView('list')">☰</button>
-                </div>
-            </div>
-
-            <!-- Product Grid -->
+            <div class="toolbar"><h2 id="categoryTitle">All Inventory</h2></div>
             <div class="grid-container" id="productGrid">
-                <!-- Javascript will fill this -->
-            </div>
-            
-            <footer style="text-align: center; padding: 40px; color: var(--text-muted); font-size: 0.8rem;">
-                <p>&copy; 2025 Apex General Ventures. All Rights Reserved.</p>
-                <p style="margin-top: 10px; cursor: pointer;" onclick="openIG()">Follow us on Instagram <span style="color: var(--primary);">@ApexVenturesUG</span></p>
-            </footer>
+                </div>
         </main>
     </div>
 
-    <!-- MODAL -->
-    <div class="modal-overlay" id="loginModal">
-        <div class="modal-box">
-            <span class="close-btn" onclick="closeLogin()">&times;</span>
-            <h2>Sign In</h2>
-            <div class="input-group" style="margin-top:20px; text-align: left;">
-                <label style="font-size:0.8rem;">Email</label>
-                <input type="text" placeholder="user@apex.ug">
-            </div>
-            <div class="input-group" style="margin-top:10px; text-align: left;">
-                <label style="font-size:0.8rem;">Password</label>
-                <input type="password" placeholder="••••••">
-            </div>
-            <button class="auth-btn" onclick="alert('Login Simulated')">Login</button>
-        </div>
-    </div>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-    <script>
-        // --- 1. MEGA INVENTORY DATA (Expanded) ---
-        const inventory = [
-            // PHONES
-            { cat: 'phone', title: 'iPhone 14 Pro Max', price: '3.8M UGX', cond: 'UK Used - Grade A', img: 'https://images.unsplash.com/photo-1678685888221-cda773a3dcdb?w=500' },
-            { cat: 'phone', title: 'iPhone 13 Pro (128GB)', price: '2.4M UGX', cond: 'UK Used - Clean', img: 'https://images.unsplash.com/photo-1632661674596-df8be070a5c5?w=500' },
-            { cat: 'phone', title: 'Samsung S23 Ultra', price: '3.5M UGX', cond: 'New in Box', img: 'https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?w=500' },
-            { cat: 'phone', title: 'Pixel 7 Pro', price: '1.8M UGX', cond: 'UK Used', img: 'https://images.unsplash.com/photo-1598327105666-5b89351aff23?w=500' },
-            { cat: 'phone', title: 'iPhone XR', price: '950k UGX', cond: 'UK Used', img: 'https://via.placeholder.com/500x300?text=iPhone+XR' },
-            { cat: 'phone', title: 'Samsung A14', price: '550k UGX', cond: 'New', img: 'https://via.placeholder.com/500x300?text=Samsung+A14' },
-            { cat: 'phone', title: 'Infinix Note 30 Pro', price: '980k UGX', cond: 'New', img: 'https://via.placeholder.com/500x300?text=Infinix' },
+        // *** YOUR REAL KEYS FROM THE SCREENSHOT ***
+        const firebaseConfig = {
+            apiKey: "AIzaSyB6Y-7jvZD_K0VlCXqej0I7QVMWvfZIoDE",
+            authDomain: "apex-ventures.firebaseapp.com",
+            projectId: "apex-ventures",
+            storageBucket: "apex-ventures.firebasestorage.app",
+            messagingSenderId: "408272395714",
+            appId: "1:408272395714:web:dc6de0756f694b7028ca5b"
+        };
+        // ****************************************
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const dbCollection = collection(db, "inventory");
+
+        let inventory = [];
+
+        // 1. LOAD DATA
+        async function loadProducts() {
+            const grid = document.getElementById('productGrid');
+            grid.innerHTML = '<p style="margin:20px; color:#666;">Loading latest stock...</p>';
             
-            // COMPUTING
-            { cat: 'computing', title: 'MacBook Air M1', price: '3.2M UGX', cond: 'Open Box', img: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca4?w=500' },
-            { cat: 'computing', title: 'HP EliteBook 840 G6', price: '1.4M UGX', cond: 'Refurbished', img: 'https://images.unsplash.com/photo-1544731612-de7f96afe55f?w=500' },
-            { cat: 'computing', title: 'Dell XPS 13', price: '2.8M UGX', cond: 'UK Used', img: 'https://via.placeholder.com/500x300?text=Dell+XPS' },
-            { cat: 'computing', title: 'Lenovo ThinkPad X1', price: '1.9M UGX', cond: 'Refurbished', img: 'https://via.placeholder.com/500x300?text=ThinkPad' },
-            { cat: 'computing', title: 'MacBook Pro 16"', price: '4.5M UGX', cond: 'UK Used', img: 'https://via.placeholder.com/500x300?text=MBP+16' },
+            try {
+                const q = query(dbCollection);
+                const querySnapshot = await getDocs(q);
+                inventory = [];
+                querySnapshot.forEach((doc) => {
+                    const data = doc.data();
+                    inventory.push({
+                        cat: data.cat,
+                        title: data.name,
+                        price: new Intl.NumberFormat('en-UG', { style: 'currency', currency: 'UGX' }).format(data.price),
+                        cond: data.cond,
+                        img: data.img
+                    });
+                });
+                window.render('all'); 
+            } catch (error) {
+                console.error("Error:", error);
+                grid.innerHTML = '<p style="color:red; margin:20px;">Could not connect to database.</p>';
+            }
+        }
 
-            // GAMING
-            { cat: 'gaming', title: 'PlayStation 5 (Disc)', price: '2.2M UGX', cond: 'Brand New', img: 'https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?w=500' },
-            { cat: 'gaming', title: 'Xbox Series S', price: '1.1M UGX', cond: 'Brand New', img: 'https://images.unsplash.com/photo-1621259182903-06dc1c460c59?w=500' },
-            { cat: 'gaming', title: 'PS5 Controller', price: '250k UGX', cond: 'New', img: 'https://via.placeholder.com/500x300?text=Controller' },
-            { cat: 'gaming', title: 'Nintendo Switch OLED', price: '1.5M UGX', cond: 'New', img: 'https://via.placeholder.com/500x300?text=Switch' },
-
-            // HOME
-            { cat: 'home', title: 'Hisense 55" 4K Smart', price: '1.6M UGX', cond: 'New', img: 'https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?w=500' },
-            { cat: 'home', title: 'JBL Charge 5', price: '450k UGX', cond: 'New', img: 'https://images.unsplash.com/photo-1612196562098-b8084f7678f1?w=500' },
-            { cat: 'home', title: 'LG Washing Machine', price: '1.8M UGX', cond: 'New (7kg)', img: 'https://via.placeholder.com/500x300?text=LG+Washer' },
-            { cat: 'home', title: '4-Burner Gas Cooker', price: '850k UGX', cond: 'New', img: 'https://via.placeholder.com/500x300?text=Cooker' },
-            { cat: 'home', title: 'Air Fryer (6L)', price: '350k UGX', cond: 'New', img: 'https://via.placeholder.com/500x300?text=Air+Fryer' },
-
-            // MOTORS
-            { cat: 'motors', title: 'Subaru Forester XT', price: '45M UGX', cond: 'Bond - 2015', img: 'https://images.unsplash.com/photo-1629897262076-2e91bf975c5e?w=500' },
-            { cat: 'motors', title: 'Toyota Premio 260', price: '35M UGX', cond: 'Bond - 2012', img: 'https://images.unsplash.com/photo-1626243913076-2810842e20dd?w=500' },
-            { cat: 'motors', title: 'Toyota Harrier', price: '68M UGX', cond: 'Bond - 2016', img: 'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=500' },
-            
-            // MATERIALS
-            { cat: 'materials', title: 'Simba Cement (50kg)', price: '31,000 UGX', cond: 'Bulk Supply', img: 'https://images.unsplash.com/photo-1560179707-f14e90ef3623?w=500' },
-            { cat: 'materials', title: 'Iron Sheets G30', price: '45,000 UGX', cond: 'Per Sheet', img: 'https://images.unsplash.com/photo-1533036894064-0063ec64a387?w=500' },
-            { cat: 'materials', title: 'Fuso Fighter Truck', price: '75M UGX', cond: 'Used - Good', img: 'https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?w=500' }
-        ];
-
-        // --- 2. RENDER LOGIC ---
-        const grid = document.getElementById('productGrid');
-        const catTitle = document.getElementById('categoryTitle');
-
-        function render(filter) {
+        // 2. RENDER
+        window.render = function(filter) {
+            const grid = document.getElementById('productGrid');
+            const catTitle = document.getElementById('categoryTitle');
             grid.innerHTML = '';
             
-            // Filter Data
             const items = filter === 'all' ? inventory : inventory.filter(i => i.cat === filter);
-            
-            // Update Header
-            const btnText = document.querySelector(`.cat-btn[onclick*="${filter}"]`)?.innerText || "All Inventory";
-            catTitle.innerText = btnText;
+            catTitle.innerText = filter === 'all' ? "All Inventory" : filter.toUpperCase();
 
-            // Generate Cards
+            if(items.length === 0) {
+                grid.innerHTML = `<p style="color:#666; grid-column:1/-1; text-align:center;">No stock in this category currently.</p>`;
+                return;
+            }
+
             items.forEach(item => {
                 const card = document.createElement('div');
                 card.className = 'card';
-                card.onclick = () => inquire(item.title);
+                card.onclick = () => window.inquire(item.title);
                 card.innerHTML = `
                     <img src="${item.img}" onerror="this.src='https://via.placeholder.com/300?text=Apex+Stock'">
                     <div class="card-details">
@@ -526,104 +174,24 @@
             });
         }
 
-        // --- 3. FILTER HANDLER ---
-        function filter(cat, btn) {
-            render(cat);
+        // 3. UI HELPERS
+        window.filter = function(cat, btn) {
+            window.render(cat);
             document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
+            if(btn) btn.classList.add('active');
         }
-
-        // --- 4. VIEW TOGGLES (List/Grid) ---
-        function setView(mode) {
-            if(mode === 'list') {
-                grid.classList.add('list-view');
-            } else {
-                grid.classList.remove('list-view');
-            }
-        }
-
-        // --- 5. THEME TOGGLE (Light/Dark) ---
-        function toggleTheme() {
-            document.body.classList.toggle('light-mode');
-        }
-
-        // --- 6. COLOR PICKER ---
-        function toggleColorPanel() {
-            document.getElementById('colorPanel').classList.toggle('show');
-        }
-        function setColor(color) {
+        window.toggleTheme = function() { document.body.classList.toggle('light-mode'); }
+        window.toggleColorPanel = function() { document.getElementById('colorPanel').classList.toggle('show'); }
+        window.setColor = function(color) {
             document.body.style.setProperty('--primary', color);
-            // Re-init particles for new color
-            initParticles();
-            // Close panel
             document.getElementById('colorPanel').classList.remove('show');
         }
-
-        // --- 7. MODAL ---
-        const modal = document.getElementById('loginModal');
-        function openLogin() { modal.classList.add('open'); }
-        function closeLogin() { modal.classList.remove('open'); }
-        modal.addEventListener('click', e => { if(e.target === modal) closeLogin(); });
-
-        // --- 8. WHATSAPP & SOCIALS ---
-        const myNumber = "256757081676"; // CHANGE THIS
-        const instagramHandle = "ApexVenturesUG"; // CHANGE THIS
-
-        function openWA() { window.open(`https://wa.me/${myNumber}`, '_blank'); }
-        function openIG() { window.open(`https://instagram.com/${instagramHandle}`, '_blank'); }
-        function inquire(item) { window.open(`https://wa.me/${myNumber}?text=Inquiry: ${item}`, '_blank'); }
-
-        // --- 9. PARTICLES ---
-        const canvas = document.getElementById("particle-canvas");
-        const ctx = canvas.getContext("2d");
-        let particles = [];
         
-        function resize() {
-            canvas.width = document.querySelector('.hero').offsetWidth;
-            canvas.height = document.querySelector('.hero').offsetHeight;
-        }
+        const myNumber = "256757081676";
+        window.openWA = function() { window.open(`https://wa.me/${myNumber}`, '_blank'); }
+        window.inquire = function(item) { window.open(`https://wa.me/${myNumber}?text=Inquiry: ${item}`, '_blank'); }
 
-        class Particle {
-            constructor() {
-                this.x = Math.random() * canvas.width;
-                this.y = Math.random() * canvas.height;
-                this.size = Math.random() * 2 + 0.5;
-                this.speedX = Math.random() * 1 - 0.5;
-                this.speedY = Math.random() * 1 - 0.5;
-            }
-            update() {
-                this.x += this.speedX;
-                this.y += this.speedY;
-                if (this.x > canvas.width) this.x = 0; else if (this.x < 0) this.x = canvas.width;
-                if (this.y > canvas.height) this.y = 0; else if (this.y < 0) this.y = canvas.height;
-            }
-            draw() {
-                ctx.fillStyle = getComputedStyle(document.body).getPropertyValue('--primary');
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fill();
-            }
-        }
-
-        function initParticles() {
-            particles = [];
-            for (let i = 0; i < 40; i++) particles.push(new Particle());
-        }
-
-        function animate() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            particles.forEach(p => { p.update(); p.draw(); });
-            requestAnimationFrame(animate);
-        }
-
-        // Re-init particles on theme change to update color
-        const observer = new MutationObserver(animate);
-        observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
-
-        window.addEventListener('resize', () => { resize(); initParticles(); });
-        resize(); initParticles(); animate();
-        render('all');
-
+        loadProducts();
     </script>
 </body>
 </html>
