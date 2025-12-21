@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Apex Ventures | Verified Market</title>
+    <link rel="icon" type="image/png" href="logo.png">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&family=Plus+Jakarta+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root { 
+            /* UGANDAN THEME */
+            --ug-yellow: #FCD116; 
+            --ug-red: #CE1126;    
+            --ug-black: #000000;  
+            
+            /* DEFAULT DARK MODE */
+            --bg: #050505; 
+            --surface: rgba(20, 20, 20, 0.95);
+            --border: rgba(255, 255, 255, 0.15); 
+            --text: #ffffff; 
+            --text-muted: #aaaaaa;
+            --nav-bg: #000000;
+        }
+
+        /* LIGHT MODE OVERRIDE */
+        body.light-mode {
+            --bg: #f4f4f4; 
+            --surface: #ffffff; 
+            --border: #ddd; 
+            --text: #111; 
+            --text-muted: #555; 
+            --nav-bg: #ffffff;
+        }
+
+        * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color: transparent; }
+        body { background-color: var(--bg); color: var(--text); font-family: 'Plus Jakarta Sans', sans-serif; padding-bottom: 80px; transition: 0.3s; }
+
+        /* --- NAV BAR --- */
+        nav { 
+            padding: 15px 20px; background: var(--nav-bg); color: var(--text);
+            display: flex; justify-content: space-between; align-items: center; 
+            position: sticky; top:0; z-index:100; border-bottom: 3px solid var(--ug-yellow);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.5);
+        }
+
+        .nav-left { display: flex; align-items: center; gap: 15px; }
+        
+        /* HAMBURGER MENU BUTTON */
+        .menu-btn {
+            background: none; border: none; color: var(--text); font-size: 1.8rem; cursor: pointer;
+            transition: 0.2s;
+        }
+        .menu-btn:hover { color: var(--ug-yellow); }
+
+        .logo { font-family: 'Outfit'; font-weight: 900; font-size: 1.4rem; letter-spacing: -0.5px; text-transform: uppercase; cursor: pointer; } 
+        .logo span { color: var(--ug-yellow); }
+
+        /* --- COLLAPSIBLE SIDEBAR --- */
+        .sidebar { 
+            position: fixed; top: 0; left: -300px; width: 280px; height: 100vh;
+            background: var(--surface); backdrop-filter: blur(15px);
+            border-right: 2px solid var(--ug-yellow); z-index: 1001;
+            padding: 20px; display: flex; flex-direction: column;
+            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 10px 0 30px rgba(0,0,0,0.5);
+        }
+        .sidebar.open { left: 0; }
+
+        /* Sidebar Overlay */
+        .overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8); z-index: 1000;
+            opacity: 0; pointer-events: none; transition: 0.3s;
+        }
+        .overlay.active { opacity: 1; pointer-events: all; }
+
+        .sidebar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
+        .close-btn { background: none; border: none; color: var(--ug-red); font-size: 1.5rem; cursor: pointer; font-weight: bold; }
+
+        .cat-list { flex: 1; overflow-y: auto; }
+        .cat-header { padding: 12px; cursor: pointer; font-weight: 600; display:flex; justify-content:space-between; border-bottom: 1px solid var(--border); transition: 0.2s; }
+        .cat-header:hover { color: var(--ug-yellow); padding-left: 15px; }
+        .cat-body { display: none; padding-left: 15px; background: rgba(0,0,0,0.1); }
+        .cat-body.open { display: block; }
+        .sub-link { padding: 10px; cursor: pointer; display: block; font-size: 0.9rem; color: var(--text-muted); }
+        .sub-link:hover { color: var(--ug-red); font-weight: bold; }
+
+        /* WHATSAPP BUTTON (Sidebar) */
+        .wa-btn {
+            margin-top: 20px; background: #25D366; color: white; padding: 15px;
+            border-radius: 8px; text-decoration: none; font-weight: 800;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            transition: 0.2s; border: 1px solid #1ebc57; font-family: 'Outfit';
+        }
+        .wa-btn:hover { background: #1ebc57; transform: scale(1.02); }
+
+        /* --- MAIN CONTENT --- */
+        .main-layout { max-width: 1200px; margin: 20px auto; padding: 0 20px; }
+
+        /* SEARCH BAR */
+        .search-area { display: flex; gap: 10px; margin-bottom: 20px; }
+        .search-input { 
+            flex: 1; padding: 12px 20px; border-radius: 50px; border: 1px solid var(--border); 
+            background: var(--surface); color: var(--text); outline: none; font-family: 'Plus Jakarta Sans';
+        }
+        .search-btn { 
+            background: var(--ug-yellow); color: black; border: none; padding: 0 25px; 
+            border-radius: 50px; font-weight: bold; cursor: pointer; transition: 0.2s;
+        }
+        .search-btn:hover { background: white; }
+
+        /* GRID */
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 15px; }
+        .card { 
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: 12px; overflow: hidden; cursor: pointer; 
+            transition: 0.3s; position: relative;
+        }
+        .card:hover { transform: translateY(-5px); border-color: var(--ug-yellow); }
+        .card img { width: 100%; height: 180px; object-fit: cover; background: #111; }
+        
+        .info { padding: 15px; }
+        .card-name { font-weight: 700; font-size: 0.95rem; margin-bottom: 5px; height: 40px; overflow: hidden; font-family: 'Outfit'; }
+        .price { color: var(--ug-red); font-weight: 900; font-size: 1.1rem; }
+        
+        /* BADGES */
+        .badge-verified { position: absolute; top: 10px; right: 10px; background: black; color: var(--ug-yellow); padding: 3px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: bold; border: 1px solid var(--ug-yellow); }
+        .badge-premium { position: absolute; top: 10px; left: 10px; background: var(--ug-yellow); color: black; padding: 3px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: 900; }
+        
+        /* CART MODAL */
+        .cart-modal { position: fixed; top: 0; right: -100%; width: 100%; max-width: 400px; height: 100vh; background: var(--nav-bg); z-index: 2000; transition: 0.3s; display: flex; flex-direction: column; padding: 25px; border-left: 4px solid var(--ug-yellow); }
+        .cart-modal.open { right: 0; }
+    </style>
+</head>
+<body>
+
+    <div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
+
+    <nav>
+        <div class="nav-left">
+            <button class="menu-btn" onclick="toggleSidebar()">☰</button>
+            <div class="logo" onclick="window.location.href='index.html'">APEX<span>VENTURES</span></div>
+        </div>
+        <div style="display:flex; gap:20px; align-items:center;">
+            <button onclick="toggleTheme()" style="background:none; border:none; color:var(--text); font-size:1.4rem; cursor:pointer;">◑</button>
+            <button onclick="toggleCart()" style="background:none; border:none; color:var(--text); font-size:1.4rem; cursor:pointer;">🛒 <span id="cartCount" style="color:var(--ug-yellow); font-size:0.9rem; font-weight:bold;">0</span></button>
+        </div>
+    </nav>
+
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h3 style="font-family:'Outfit'; color:var(--ug-yellow);">DEPARTMENTS</h3>
+            <button class="close-btn" onclick="toggleSidebar()">✕</button>
+        </div>
+        
+        <div id="categoryList" class="cat-list">
+            <div style="padding:10px; color:#666;">Loading Folders...</div>
+        </div>
+        
+        <a href="https://wa.me/256757081676" target="_blank" class="wa-btn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+            WhatsApp Support
+        </a>
+    </div>
+
+    <div class="main-layout">
+        <div class="search-area">
+            <input type="text" id="searchInput" class="search-input" placeholder="Search for phones, laptops...">
+            <button class="search-btn" onclick="search(document.getElementById('searchInput').value)">GO</button>
+        </div>
+
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+            <h3 id="listTitle" style="font-family:'Outfit'; font-size:1.5rem;">Fresh Arrivals</h3>
+            <div style="font-size:0.9rem; color:var(--text-muted);">Kampala Stock</div>
+        </div>
+
+        <div class="grid" id="grid"></div>
+    </div>
+
+    <div class="cart-modal" id="cartModal">
+        <h2 style="display:flex; justify-content:space-between; margin-bottom:20px; color:var(--text); font-family:'Outfit';">Your Cart <span onclick="toggleCart()" style="cursor:pointer">✕</span></h2>
+        <div id="cartItems" style="flex:1; overflow-y:auto;"></div>
+        <div style="border-top:1px solid var(--border); padding-top:20px;">
+            <div style="font-size:1.2rem; font-weight:800; margin-bottom:15px; color:var(--text); display:flex; justify-content:space-between;"><span>Total</span> <span id="cartTotal">0 UGX</span></div>
+            <button onclick="checkout()" style="width:100%; padding:15px; background:var(--ug-yellow); color:#000; border:none; border-radius:8px; font-weight:bold; cursor:pointer;">ORDER ON WHATSAPP</button>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = { apiKey: "AIzaSyA0PaOJo_SZ7VsSu8qhJL_MAGCj_KwWtTI", projectId: "apex-ventures-340ac", appId: "1:668172357038:web:a58bb2af59d3857fd84c3f" };
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        
+        let inventory = [], cart = JSON.parse(localStorage.getItem('apexCart')) || [];
+
+        async function init() {
+            // Load Categories
+            const catSnap = await getDocs(query(collection(db, "categories"), orderBy("name")));
+            const list = document.getElementById('categoryList');
+            list.innerHTML = `<div class="cat-header" onclick="render(inventory); toggleSidebar()">All Products</div>`;
+            
+            catSnap.forEach(d => {
+                const c = d.data();
+                let subHtml = '';
+                if(c.subs) c.subs.forEach(s => subHtml += `<div class="sub-link" onclick="filterSub('${c.val}', '${s}')">→ ${s}</div>`);
+                list.innerHTML += `
+                <div class="cat-group">
+                    <div class="cat-header" onclick="this.nextElementSibling.classList.toggle('open')">
+                        ${c.name} <span style="color:var(--ug-yellow);">${c.subs && c.subs.length ? '▼' : ''}</span>
+                    </div>
+                    <div class="cat-body">${subHtml}</div>
+                </div>`;
+            });
+
+            // Load Products
+            const snap = await getDocs(collection(db, "inventory"));
+            snap.forEach(d => inventory.push(d.data()));
+            render(inventory);
+            updateCart();
+        }
+
+        window.render = (items) => {
+            const grid = document.getElementById('grid');
+            if(items.length===0) { grid.innerHTML='<div style="padding:20px; color:var(--text-muted);">No products found.</div>'; return; }
+            grid.innerHTML = items.map(i => {
+                let badges = '';
+                if(i.verified) badges += `<div class="badge-verified">✔</div>`;
+                if(i.premium) badges += `<div class="badge-premium">PREMIUM</div>`;
+                
+                let stockMsg = '';
+                if(i.stock && i.stock < 3) stockMsg = `<div style="font-size:0.7rem; color:var(--ug-red); margin-top:5px;">⚠️ Only ${i.stock} Left</div>`;
+                if(i.stock === 0) stockMsg = `<div style="font-size:0.7rem; color:#888; margin-top:5px;">❌ Sold Out</div>`;
+
+                return `
+                <div class="card" onclick="viewProduct('${i.name}')">
+                    ${badges}
+                    <img src="${i.img}" onerror="this.src='https://via.placeholder.com/200'">
+                    <div class="info">
+                        <div class="card-name">${i.name}</div>
+                        <div class="price"><span>UGX</span> ${parseInt(i.price).toLocaleString()}</div>
+                        ${stockMsg}
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        window.filterSub = (cat, sub) => { document.getElementById('listTitle').innerText = sub; render(inventory.filter(i => i.cat === cat && i.subcat === sub)); toggleSidebar(); }
+        window.search = (val) => render(inventory.filter(i=>i.name.toLowerCase().includes(val.toLowerCase())));
+        window.toggleSidebar = () => { document.getElementById('sidebar').classList.toggle('open'); document.getElementById('overlay').classList.toggle('active'); }
+        window.toggleTheme = () => document.body.classList.toggle('light-mode');
+        window.toggleCart = () => document.getElementById('cartModal').classList.toggle('open');
+        
+        window.updateCart = () => {
+            document.getElementById('cartCount').innerText = cart.length;
+            let total = 0;
+            document.getElementById('cartItems').innerHTML = cart.map((i, idx) => {
+                total += parseInt(i.price);
+                return `<div style="display:flex; justify-content:space-between; margin-bottom:10px; color:var(--text);">
+                    <span>${i.name}</span>
+                    <button onclick="cart.splice(${idx},1); localStorage.setItem('apexCart',JSON.stringify(cart)); updateCart();" style="color:red; background:none; border:none;">✕</button>
+                </div>`;
+            }).join('');
+            document.getElementById('cartTotal').innerText = total.toLocaleString() + " UGX";
+        }
+        
+        window.checkout = () => { if(cart.length) { localStorage.setItem('pendingOrder', JSON.stringify({items:cart})); window.location.href='product.html?checkout=true'; } }
+        window.viewProduct = (name) => { localStorage.setItem('selectedProduct', JSON.stringify(inventory.find(i=>i.name===name))); window.location.href='product.html'; }
+
+        init();
+    </script>
+</body>
+</html>

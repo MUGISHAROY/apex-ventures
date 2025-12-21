@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Item | Apex Ventures</title>
+    <link rel="icon" type="image/png" href="logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&family=Plus+Jakarta+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css" />
+    <style>
+        :root { 
+            --gold: #FFD700; --bg: #fff; --text: #111; --border: #e0e0e0;
+            --blue: #007185;
+        }
+        body.dark-mode { --bg: #050505; --text: #fff; --border: #333; }
+        
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { background: var(--bg); color: var(--text); padding-bottom: 50px; }
+        
+        .header { background: #131921; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; color: white; }
+        .logo { font-family: 'Outfit'; font-weight: 900; font-size: 1.2rem; text-transform: uppercase; } .logo span { color: var(--gold); }
+        
+        .main-container { max-width: 1100px; margin: 20px auto; padding: 20px; display: grid; grid-template-columns: 45% 55%; gap: 30px; }
+        
+        .image-col img { width: 100%; max-height: 400px; object-fit: contain; }
+        
+        .info-col h1 { font-family: 'Outfit'; font-size: 1.8rem; line-height: 1.2; margin-bottom: 10px; }
+        .price { color: #B12704; font-size: 2rem; font-weight: 800; font-family: 'Outfit'; }
+        
+        .stock-status { color: #007600; font-weight: bold; margin: 10px 0; }
+        
+        .features { margin-top: 20px; font-size: 0.9rem; line-height: 1.6; }
+        .features li { margin-bottom: 8px; }
+
+        .btn-row { display: flex; gap: 10px; margin-top: 20px; }
+        .btn { flex: 1; padding: 15px; border: none; border-radius: 30px; font-weight: bold; cursor: pointer; }
+        .btn-cart { background: #FFD814; color: #000; }
+        .btn-buy { background: #FFA41C; color: #000; }
+
+        /* DELIVERY BOX */
+        .delivery-box { margin-top: 30px; padding: 20px; border: 1px solid var(--border); border-radius: 8px; }
+        .del-input { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 4px; }
+        #map { height: 200px; width: 100%; margin-top: 10px; z-index: 1; }
+
+        @media(max-width: 768px) { .main-container { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div class="logo">APEX <span>VENTURES</span></div>
+        <a href="index.html" style="color:white; text-decoration:none; font-weight:bold;">Back</a>
+    </div>
+
+    <div class="main-container">
+        <div class="image-col">
+            <img id="pImg" src="">
+        </div>
+
+        <div class="info-col">
+            <h1 id="pName">...</h1>
+            <div class="price" id="pPrice">...</div>
+            <div class="stock-status">In Stock (Kampala Warehouse)</div>
+            
+            <ul class="features">
+                <li>✅ <strong>Local Warranty:</strong> 1 Year Support</li>
+                <li>🚚 <strong>Delivery:</strong> Free in CBD, Standard rates Upcountry</li>
+                <li>📱 <strong>Payment:</strong> Cash on Delivery / Mobile Money</li>
+            </ul>
+
+            <div class="btn-row">
+                <button class="btn btn-cart" onclick="addToCart()">Add to Cart</button>
+                <button class="btn btn-buy" onclick="scrollToOrder()">Buy Now</button>
+            </div>
+
+            <div class="delivery-box" id="orderForm">
+                <h3 style="margin-bottom:10px;">Where are we delivering?</h3>
+                <input type="text" id="cName" class="del-input" placeholder="Your Name">
+                <input type="text" id="cLoc" class="del-input" placeholder="Location (e.g. Bukoto, Jinja Road)">
+                <div style="font-size:0.8rem; color:#666;">Pin exact location for faster boda/courier delivery:</div>
+                <div id="map"></div>
+                <button class="btn btn-buy" style="width:100%; margin-top:15px;" onclick="submitOrder()">CONFIRM ORDER</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = { apiKey: "AIzaSyA0PaOJo_SZ7VsSu8qhJL_MAGCj_KwWtTI", projectId: "apex-ventures-340ac", appId: "1:668172357038:web:a58bb2af59d3857fd84c3f" };
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        let product = JSON.parse(localStorage.getItem('selectedProduct'));
+        let cart = JSON.parse(localStorage.getItem('apexCart')) || [];
+        let pendingCart = JSON.parse(localStorage.getItem('pendingOrder'));
+        let lat = 0.3476, lng = 32.5825;
+
+        // INIT
+        const urlParams = new URLSearchParams(window.location.search);
+        if(urlParams.get('checkout') === 'true' && pendingCart) {
+            document.getElementById('pName').innerText = "Cart Order (" + pendingCart.items.length + " Items)";
+            let total = pendingCart.items.reduce((sum, i) => sum + parseInt(i.price), 0);
+            document.getElementById('pPrice').innerText = "UGX " + total.toLocaleString();
+            document.getElementById('pImg').style.display = 'none';
+        } else if(product) {
+            document.getElementById('pName').innerText = product.name;
+            document.getElementById('pPrice').innerText = "UGX " + parseInt(product.price).toLocaleString();
+            document.getElementById('pImg').src = product.img;
+        }
+
+        window.addToCart = () => {
+            cart.push(product);
+            localStorage.setItem('apexCart', JSON.stringify(cart));
+            alert("Added to Cart");
+        }
+
+        window.scrollToOrder = () => {
+            document.getElementById('orderForm').scrollIntoView({behavior:'smooth'});
+            setTimeout(() => { map.invalidateSize(); }, 500);
+        }
+
+        let map;
+        setTimeout(() => {
+            map = L.map('map').setView([lat, lng], 13);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+            const marker = L.marker([lat, lng], {draggable:true}).addTo(map);
+            marker.on('dragend', e => { const p=marker.getLatLng(); lat=p.lat.toFixed(5); lng=p.lng.toFixed(5); });
+        }, 1000);
+
+        window.submitOrder = () => {
+            const name = document.getElementById('cName').value || "Guest";
+            const loc = document.getElementById('cLoc').value || "Pin";
+            let msg = `*🛒 APEX UG ORDER* %0A`;
+            msg += `Item: ${document.getElementById('pName').innerText} %0A`;
+            msg += `Price: ${document.getElementById('pPrice').innerText} %0A`;
+            msg += `Customer: ${name} %0A`;
+            msg += `Location: ${loc} %0A`;
+            msg += `Map: http://maps.google.com/?q=${lat},${lng}`;
+            window.open(`https://wa.me/256757081676?text=${msg}`, '_blank');
+        }
+    </script>
+</body>
+</html>
